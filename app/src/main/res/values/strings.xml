@@ -1,16 +1,14 @@
 <resources>
     <string name="app_name">ThirtyGame</string>
     <string name="throw_button">Throw</string>
-    <string-array name="score_choices">
-        <item>Low</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-    </string-array>
+    <string name="score_button">Calculate</string>
+    <string name="score_spinner">Score choice</string>
+    <string name="die_one">Die One</string>
+    <string name="die_two">Die Two</string>
+    <string name="die_three">Die Three</string>
+    <string name="die_four">Die Four</string>
+    <string name="die_five">Die Five</string>
+    <string name="die_six">Die Six</string>
+    <string name="round">Round: %d</string>
+    <string name="rolls_left">Rolls left: %d</string>
 </resources>

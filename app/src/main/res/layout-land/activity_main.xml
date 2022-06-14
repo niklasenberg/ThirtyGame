@@ -1,53 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
 
         <LinearLayout
-            android:baselineAligned="false"
-            android:padding="24dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="0.7"
-                android:paddingEnd="24dp"
-                android:layout_height="match_parent">
-                <Spinner
-                    android:id="@+id/choice_spinner"
-                    android:spinnerMode="dropdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </RelativeLayout>
+            <ImageButton
+                android:id="@+id/die_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/die_one"
+                android:background="@null"
+                android:paddingEnd="10dp"
+                android:src="@drawable/white1" />
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="0.3"
-                android:layout_height="match_parent">
-                <Button
-                    android:text="@string/throw_button"
-                    android:id="@+id/throw_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </RelativeLayout>
+            <ImageButton
+                android:id="@+id/die_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/die_two"
+                android:background="@null"
+                android:paddingEnd="10dp"
+                android:src="@drawable/white1" />
+
+            <ImageButton
+                android:id="@+id/die_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/die_three"
+                android:background="@null"
+                android:src="@drawable/white1" />
         </LinearLayout>
-    </RelativeLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/die_four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/die_four"
+                android:background="@null"
+                android:paddingEnd="10dp"
+                android:src="@drawable/white1" />
+
+            <ImageButton
+                android:id="@+id/die_five"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:paddingEnd="10dp"
+                android:contentDescription="@string/die_five"
+                android:src="@drawable/white1" />
+
+            <ImageButton
+                android:id="@+id/die_six"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/die_six"
+                android:background="@null"
+                android:src="@drawable/white1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_gravity="center_vertical|end">
+
+        <TextView
+            android:id="@+id/round_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/rolls_left_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:padding="24dp">
+
+
+        <Spinner
+            android:id="@+id/choice_spinner"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/score_spinner"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/throw_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/throw_button" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,49 +7,105 @@
     android:gravity="bottom"
     tools:context=".MainActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.85">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.15">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="24dp"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:baselineAligned="false"
-            android:padding="24dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:layout_gravity="center">
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="0.7"
-                android:paddingEnd="24dp"
-                android:layout_height="match_parent">
-                <Spinner
-                    android:id="@+id/choice_spinner"
-                    android:spinnerMode="dropdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="0.3"
-                android:layout_height="match_parent">
-                <Button
-                    android:text="@string/throw_button"
-                    android:id="@+id/throw_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </RelativeLayout>
+            <ImageButton
+                android:id="@+id/die_one"
+                android:background="@null"
+                android:contentDescription="@string/die_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="10dp"
+                android:src="@drawable/white1"/>
+            <ImageButton
+                android:id="@+id/die_two"
+                android:background="@null"
+                android:contentDescription="@string/die_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="10dp"
+                android:src="@drawable/white1"/>
+            <ImageButton
+                android:id="@+id/die_three"
+                android:background="@null"
+                android:contentDescription="@string/die_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/white1"/>
         </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:id="@+id/die_four"
+                android:background="@null"
+                android:contentDescription="@string/die_four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="10dp"
+                android:src="@drawable/white1"/>
+            <ImageButton
+                android:id="@+id/die_five"
+                android:background="@null"
+                android:contentDescription="@string/die_five"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="10dp"
+                android:src="@drawable/white1"/>
+            <ImageButton
+                android:id="@+id/die_six"
+                android:background="@null"
+                android:contentDescription="@string/die_six"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/white1"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/round_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="24dp" />
+
+        <TextView
+            android:id="@+id/rolls_left_text_view"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="24dp" />
+
+        <Spinner
+            android:padding="24dp"
+            android:id="@+id/choice_spinner"
+            android:contentDescription="@string/score_spinner"
+            android:spinnerMode="dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:padding="24dp"
+            android:text="@string/throw_button"
+            android:id="@+id/throw_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+</FrameLayout>
