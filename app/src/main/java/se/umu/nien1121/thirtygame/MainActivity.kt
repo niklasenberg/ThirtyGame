@@ -1,77 +1,103 @@
 package se.umu.nien1121.thirtygame
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import se.umu.nien1121.thirtygame.databinding.ActivityMainBinding
 
-//Bundle keys
-private const val ROUND_KEY = "se.umu.nien1121.round"
-private const val ROLLS_LEFT_KEY = "se.umu.nien1121.rollsLeft"
-private const val DICE_KEY = "se.umu.nien1121.dice"
-private const val SCOREBOARD_KEY = "se.umu.nien1121.scoreboard"
-
+/**
+ * Primary activity for game application. Lets user roll die and choose calculation method.
+ */
 class MainActivity : AppCompatActivity() {
 
-    //Widgets
-    private lateinit var throwButton: Button
-    private lateinit var choiceSpinner: Spinner
+    //Views handled via binding, dice buttons cached in arraylist for ease of operation
+    private lateinit var binding: ActivityMainBinding
     private lateinit var diceButtons: ArrayList<ImageButton>
-    private lateinit var roundTextView: TextView
-    private lateinit var rollsLeftTextView: TextView
 
-    //Models and logic
-    private lateinit var dice: ArrayList<Die>
-    private lateinit var scoreboard: Scoreboard
-    private var round = 1
-    private var rollsLeft = 3
+    /**
+     * ViewModel used for storing of state data
+     */
+    private val model: GameViewModel by lazy { ViewModelProvider(this).get(GameViewModel::class.java) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        if (savedInstanceState != null) {
-            round = savedInstanceState.getInt(ROUND_KEY)
-            rollsLeft = savedInstanceState.getInt(ROLLS_LEFT_KEY)
-            dice = savedInstanceState.getParcelableArrayList(DICE_KEY)!!
-            scoreboard = savedInstanceState.getParcelable(SCOREBOARD_KEY)!!
-        } else {
-            dice = ArrayList()
-            for (i in 1..6) {
-                val die = Die(rollable = true, value = 1, selected = false, counted = false)
-                dice.add(die)
-                die.roll()
+    /**
+     * Initiates new game and resets [View]s on finished [ResultActivity]
+     */
+    private val resultListener =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                model.startNewGame()
+                binding.throwButton.isEnabled = true
+                updateViews()
             }
-            scoreboard = Scoreboard()
         }
 
-        findViews()
+    /**
+     * Initiates and inflates binding and views, sets listeners
+     * @param savedInstanceState priorly saved state, only used in super constructor
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        findDiceButtons()
         setListeners()
         updateViews()
     }
 
-    private fun findViews() {
-        throwButton = findViewById(R.id.throw_button)
-        choiceSpinner = findViewById(R.id.choice_spinner)
-
+    /**
+     * Collects [ImageButton] for each die into ArrayList for iteration purposes
+     */
+    private fun findDiceButtons() {
         diceButtons = arrayListOf(
-            findViewById(R.id.die_one), findViewById(R.id.die_two), findViewById(R.id.die_three),
-            findViewById(R.id.die_four), findViewById(R.id.die_five), findViewById(R.id.die_six)
+            binding.dieOne,
+            binding.dieTwo,
+            binding.dieThree,
+            binding.dieFour,
+            binding.dieFive,
+            binding.dieSix
         )
-
-        roundTextView = findViewById(R.id.round_text_view)
-        rollsLeftTextView = findViewById(R.id.rolls_left_text_view)
     }
 
+    /**
+     * Sets listeners for dice buttons and spinner
+     */
     private fun setListeners() {
-        for (dieButton in diceButtons) {
-            dieButton.setOnClickListener {
-                dice[diceButtons.indexOf(dieButton)].select()
-                updateViews()
+        //Correlate each button to Die in model
+        diceButtons.forEachIndexed { index, element ->
+            element.setOnClickListener {
+                model.selectDie(index)
+                updateDiceButtons()
+            }
+        }
+
+        //Make spinner write to model in order to persist selected item across lifecycles
+        binding.choiceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //Do nothing
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                //Update position
+                model.spinnerChoice = position
             }
         }
     }
 
+    /**
+     * Updates all views depending on model state
+     */
     private fun updateViews() {
         updateDiceButtons()
         updateTextViews()
@@ -79,104 +105,87 @@ class MainActivity : AppCompatActivity() {
         updateSpinner()
     }
 
-    private fun updateSpinner() {
-        if (round <= 10) {
-            val adapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item, scoreboard.getScoreChoices()
-            )
-            choiceSpinner.adapter = adapter
-        }
-    }
-
-    private fun updateThrowButton() {
-        if (rollsLeft == 0 || getActiveDice() == 0) {
-            throwButton.setText(R.string.score_button)
-            throwButton.setOnClickListener { getScore() }
-        } else {
-            throwButton.setText(R.string.throw_button)
-            throwButton.setOnClickListener {
-                rollDice()
-            }
-        }
-    }
-
-    private fun getActiveDice(): Int {
-        var sum = 0
-        for (die in dice) {
-            if (die.rollable) {
-                sum++
-            }
-        }
-        return sum
-    }
-
+    /**
+     * Updates dice buttons, changing images and enabling/disabling depending on model state
+     */
     private fun updateDiceButtons() {
-        if (rollsLeft == 0) {
-            for (die in dice) {
-                die.rollable = false
-            }
-        }
+        diceButtons.forEachIndexed { index, element ->
+            //Get Die object to access enabled property
+            val die = model.getDie(index)
 
-        for (die in dice) {
-            diceButtons[dice.indexOf(die)].setImageDrawable(
+            //Update image
+            element.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
-                    die.getImageResId()
+                    model.getDieImage(die)
                 )
             )
-            diceButtons[dice.indexOf(die)].isEnabled = die.rollable
+            element.isEnabled = die.enabled
         }
     }
 
+    /**
+     * Updates [TextView]s presenting current round and amount of rolls left
+     */
     private fun updateTextViews() {
-        roundTextView.text = getString(R.string.round, round)
-        rollsLeftTextView.text = getString(R.string.rolls_left, rollsLeft)
+        binding.roundTextView.text = getString(R.string.round, model.round)
+        binding.rollsLeftTextView.text = getString(R.string.rolls_left, model.rollsLeft)
     }
 
-    private fun getScore() {
-        scoreboard.calculateScore(dice, choiceSpinner.selectedItem.toString())
+    /**
+     * Updates [Spinner] depending on remaining available choices
+     * and currently selected item
+     */
+    private fun updateSpinner() {
+        if (model.round <= 10) {
+            val adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item, model.getScoreChoices()
+            )
+            binding.choiceSpinner.adapter = adapter
+            binding.choiceSpinner.setSelection(model.spinnerChoice)
+        }
+    }
 
-        if (round < 10) {
-            startNewRound()
+    /**
+     * Updates whether throw button is used for throwing or calculating
+     */
+    private fun updateThrowButton() {
+        if (model.rollsLeft == 0 || model.countEnabledDice() == 0) {
+            binding.throwButton.setText(R.string.score_button)
+            binding.throwButton.setOnClickListener {
+                endRound()
+                updateViews()
+            }
         } else {
-            //TODO: Intent to resultactivity
-            startNewGame()
+            binding.throwButton.setText(R.string.throw_button)
+            binding.throwButton.setBackgroundResource(android.R.drawable.btn_default)
+            binding.throwButton.setOnClickListener {
+                model.rollDice()
+                updateViews()
+            }
         }
     }
 
-    private fun startNewGame() {
-        scoreboard.reset()
-        round = 1
-        rollsLeft = 3
-        for (die in dice) {
-            die.reset()
+    /**
+     * Ends current round and dependent on game state, launches [Intent] for [ResultActivity]
+     */
+    private fun endRound() {
+        model.noteScore(binding.choiceSpinner.selectedItem.toString())
+        if (model.round < 10) {
+            model.startNewRound()
+        } else {
+            binding.throwButton.isEnabled = false
+            val intent = Intent(this, ResultActivity::class.java)
+            intent.putExtra(RESULTS_KEY, model.getResults())
+            resultListener.launch(intent)
         }
-        updateViews()
     }
 
-    private fun startNewRound() {
-        round++
-        rollsLeft = 3
-        for (die in dice) {
-            die.reset()
-        }
-        updateViews()
-    }
-
-    private fun rollDice() {
-        for (die in dice) {
-            die.roll()
-        }
-        rollsLeft--
-        updateViews()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ROUND_KEY, round)
-        outState.putInt(ROLLS_LEFT_KEY, rollsLeft)
-        outState.putParcelableArrayList(DICE_KEY, dice)
-        outState.putParcelable(SCOREBOARD_KEY, scoreboard)
+    companion object {
+        /**
+         * Bundle key used by [ResultActivity] and [MainActivity]
+         */
+        const val RESULTS_KEY = "se.umu.nien1121.results"
     }
 }

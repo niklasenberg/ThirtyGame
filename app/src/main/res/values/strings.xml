@@ -11,4 +11,18 @@
     <string name="die_six">Die Six</string>
     <string name="round">Round: %d</string>
     <string name="rolls_left">Rolls left: %d</string>
+    <string name="total_score">Total score: %s</string>
+    <string name="done_button">Done</string>
+    <string-array name="result">
+        <item>1st round: %d</item>
+        <item>2nd round: %d</item>
+        <item>3rd round: %d</item>
+        <item>4th round: %d</item>
+        <item>5th round: %d</item>
+        <item>6th round: %d</item>
+        <item>7th round: %d</item>
+        <item>8th round: %d</item>
+        <item>9th round: %d</item>
+        <item>10th round: %d</item>
+    </string-array>
 </resources>
