@@ -55,6 +55,8 @@ class Die(var enabled: Boolean, var value: Int, var selected: Boolean, var count
         roll()
     }
 
+
+
     /**
      * Writes properties to [Parcel] for current object.
      */

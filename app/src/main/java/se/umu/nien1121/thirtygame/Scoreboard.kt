@@ -55,10 +55,9 @@ class Scoreboard(var resultKeys: IntArray, var resultValues: IntArray, var score
     fun updateScoreChoices(): ArrayList<String> {
         val choiceStrings = ArrayList<String>()
         availableScoreChoices.forEach {
-            if (it == LOW) {
-                choiceStrings.add("Low")
-            } else {
-                choiceStrings.add(it.toString())
+            when(it){
+                LOW -> choiceStrings.add("Low")
+                else -> choiceStrings.add(it.toString())
             }
         }
         return choiceStrings
@@ -113,7 +112,6 @@ class Scoreboard(var resultKeys: IntArray, var resultValues: IntArray, var score
                 //Target sum reached, note result and mark heldDice as counted.
                 result[scoreChoice] = result[scoreChoice]!! + currentSum
                 heldDice.forEach { it.counted = true }
-
                 //Release all held dice and return
                 heldDice.clear()
                 return
@@ -121,11 +119,13 @@ class Scoreboard(var resultKeys: IntArray, var resultValues: IntArray, var score
             currentSum < scoreChoice -> {
                 dice.forEach {
                     //Find die that is not held, not already counted and when added with currentSum,
-                    // does not exceed the given target sum (scoreChoice).
+                    // does not exceed the given target score (scoreChoice).
                     if (!heldDice.contains(it) && !it.counted && currentSum + it.value <= scoreChoice) {
                         //"Hold" this die and call method recursively
                         heldDice.add(it)
                         findSum(dice, heldDice, scoreChoice)
+                        //If die was held/evaluated but did not reach target score, release it.
+                        if(heldDice.isNotEmpty()) heldDice.removeLast()
                     }
                 }
             }
@@ -138,11 +138,7 @@ class Scoreboard(var resultKeys: IntArray, var resultValues: IntArray, var score
      * @return total score for current state of game
      */
     fun getTotalScore(): Int {
-        var sum = 0
-        for (i in result.values) {
-            sum += i
-        }
-        return sum
+        return result.values.sum()
     }
 
     /**

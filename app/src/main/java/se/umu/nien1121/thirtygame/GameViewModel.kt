@@ -1,12 +1,13 @@
 package se.umu.nien1121.thirtygame
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
 //SavedStateHandle keys
 private const val ROUND_KEY = "se.umu.nien1121.round"
 private const val ROLLS_LEFT_KEY = "se.umu.nien1121.rollsLeft"
-private const val SPINNER_CHOICE_KEY = "se.umu.nien1121.rollsLeft"
+private const val SPINNER_CHOICE_KEY = "se.umu.nien1121.spinnerChoice"
 private const val DICE_KEY = "se.umu.nien1121.dice"
 private const val SCOREBOARD_KEY = "se.umu.nien1121.scoreboard"
 
@@ -36,7 +37,7 @@ private val imageMap = mapOf(
 
 /**
  * [ViewModel] used by [MainActivity] to persist game state over lifecycles.
- * @param handle [SavedStateHandle] used to rebuild [GameViewModel] on destruction. Initialized [onCleared]
+ * @param handle [SavedStateHandle] used to rebuild [GameViewModel] on destruction. Initialized in [saveState].
  */
 class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     /**
@@ -134,13 +135,7 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
      * Retrieves count of currently enabled [Die]
      */
     fun countEnabledDice(): Int {
-        var enabledDice = 0
-        for (die in dice) {
-            if (die.enabled) {
-                enabledDice++
-            }
-        }
-        return enabledDice
+        return dice.filter { it.enabled }.size
     }
 
     /**
@@ -149,12 +144,10 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
      * @return id of resource
      */
     fun getDieImage(d: Die): Int {
-        return if (d.selected) {
-            imageMap[d.value]!!
-        } else if (d.enabled) {
-            imageMap[d.value + 6]!!
-        } else {
-            imageMap[d.value + 12]!!
+        return when {
+            d.selected -> imageMap[d.value]!!
+            d.enabled -> imageMap[d.value + 6]!!
+            else -> imageMap[d.value + 12]!!
         }
     }
 
@@ -188,8 +181,7 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     /**
      * Sets [handle] properties to save state of [GameViewModel] between lifecycles.
      */
-    override fun onCleared() {
-        super.onCleared()
+    fun saveState(){
         //Primitives
         handle.set(ROUND_KEY, round)
         handle.set(ROLLS_LEFT_KEY, rollsLeft)

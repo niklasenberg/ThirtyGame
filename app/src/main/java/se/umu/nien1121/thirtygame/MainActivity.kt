@@ -182,6 +182,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Saves model state when activity is placed in background
+     */
+    override fun onStop() {
+        super.onStop()
+        model.saveState()
+    }
+
     companion object {
         /**
          * Bundle key used by [ResultActivity] and [MainActivity]

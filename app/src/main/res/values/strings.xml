@@ -13,16 +13,18 @@
     <string name="rolls_left">Rolls left: %d</string>
     <string name="total_score">Total score: %s</string>
     <string name="done_button">Done</string>
-    <string-array name="result">
-        <item>1st round: %d</item>
-        <item>2nd round: %d</item>
-        <item>3rd round: %d</item>
-        <item>4th round: %d</item>
-        <item>5th round: %d</item>
-        <item>6th round: %d</item>
-        <item>7th round: %d</item>
-        <item>8th round: %d</item>
-        <item>9th round: %d</item>
-        <item>10th round: %d</item>
-    </string-array>
+    <string name="welcome_text_view">Welcome!</string>
+    <string name="rules_text_view">This game is called Thirty and is played by throwing 6 dice for a total of 10 rounds.
+        For each round, the dice can be thrown a maximum of 3 times.
+        Dice can then be chosen to be held, which will store the die\'s value and disable the die for the rest of the round.
+        When the round is over, a scoring mode is chosen. This scoring mode is either "Low",
+        which means the sum of all values below or equal to 3, or it\'s a numeric value.
+        For numeric values the score is calculated by finding the combination of dice
+        that are equal to the numeric value (target score) and that together yield the largest sum,
+        only allowing each die to be counted once. A dice setup of 1, 1, 1, 2, 4 and 4 with a
+        target score of 5 yields 10 points, combining 4 - 1 and 4 - 1.
+        When 10 rounds have been played and the scoring choices have been exhausted, the results will be presented.
+        Good luck!
+    </string>
+    <string name="ok_button">OK</string>
 </resources>
