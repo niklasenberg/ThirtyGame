@@ -9,7 +9,7 @@
     <string name="die_four">Die Four</string>
     <string name="die_five">Die Five</string>
     <string name="die_six">Die Six</string>
-    <string name="round">Round: %d</string>
+    <string name="round">Round: %d of 10</string>
     <string name="rolls_left">Rolls left: %d</string>
     <string name="total_score">Total score: %s</string>
     <string name="done_button">Done</string>

@@ -1,6 +1,5 @@
 package se.umu.nien1121.thirtygame
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
@@ -52,13 +51,13 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
 
     //Game logic
     var round = 1
-    var rollsLeft = 3
+    var rollsLeft = 2
     var spinnerChoice = 0
 
     init {
         //Init for object, depending on null saved state
         round = handle.get<Int>(ROUND_KEY) ?: 1
-        rollsLeft = handle.get<Int>(ROLLS_LEFT_KEY) ?: 3
+        rollsLeft = handle.get<Int>(ROLLS_LEFT_KEY) ?: 2
         spinnerChoice = handle.get<Int>(SPINNER_CHOICE_KEY) ?: 0
         dice = handle.get<ArrayList<Die>>(DICE_KEY) ?: newDice()
         scoreboard = handle.get<Scoreboard>(SCOREBOARD_KEY) ?: Scoreboard(
@@ -88,7 +87,7 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
     fun startNewGame() {
         scoreboard.reset()
         round = 1
-        rollsLeft = 3
+        rollsLeft = 2
         spinnerChoice = 0
         dice.forEach { it.reset() }
     }
@@ -98,7 +97,7 @@ class GameViewModel(private val handle: SavedStateHandle) : ViewModel() {
      */
     fun startNewRound() {
         round++
-        rollsLeft = 3
+        rollsLeft = 2
         spinnerChoice = 0
         dice.forEach { it.reset() }
     }

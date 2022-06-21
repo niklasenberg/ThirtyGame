@@ -55,7 +55,7 @@ class Scoreboard(var resultKeys: IntArray, var resultValues: IntArray, var score
     fun updateScoreChoices(): ArrayList<String> {
         val choiceStrings = ArrayList<String>()
         availableScoreChoices.forEach {
-            when(it){
+            when (it) {
                 LOW -> choiceStrings.add("Low")
                 else -> choiceStrings.add(it.toString())
             }
@@ -98,7 +98,7 @@ class Scoreboard(var resultKeys: IntArray, var resultValues: IntArray, var score
      * Recursive helper method used to calculate score when target score is above [LOW].
      * Finds smallest subset of dice ([heldDice]) with given sum ([scoreChoice]).
      * @param dice All [Die] objects to be traversed.
-     * MUST be descending sorted, to ensure smallest subset in calculation.
+     * MUST be descending sorted, to ensure maximum sum in calculation.
      * @param heldDice [Die] objects that qualify for evaluation
      * , i.e have a possibility of reaching exact target sum [scoreChoice].
      * @param scoreChoice target score to calculate score for.
@@ -124,8 +124,8 @@ class Scoreboard(var resultKeys: IntArray, var resultValues: IntArray, var score
                         //"Hold" this die and call method recursively
                         heldDice.add(it)
                         findSum(dice, heldDice, scoreChoice)
-                        //If die was held/evaluated but did not reach target score, release it.
-                        if(heldDice.isNotEmpty()) heldDice.removeLast()
+                        //If die was held/evaluated but did not reach target score, release it. (backtrack)
+                        if (heldDice.isNotEmpty()) heldDice.removeLast()
                     }
                 }
             }
